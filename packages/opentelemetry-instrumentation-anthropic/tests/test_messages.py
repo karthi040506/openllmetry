@@ -2669,3 +2669,33 @@ def test_process_response_item_no_crash_on_missing_input_key():
     _process_response_item(item, complete_response)
 
     assert complete_response["events"][0]["input"] == '{"key": "value"}'
+
+
+def test_anthropic_stop_sequences_request_attribute():
+    from unittest.mock import MagicMock, patch
+
+    from opentelemetry.instrumentation.anthropic.span_utils import (
+        aset_input_attributes,
+    )
+
+    span = MagicMock()
+    stop_sequences = ["END", "STOP"]
+
+    with patch(
+        "opentelemetry.instrumentation.anthropic.set_span_attribute"
+    ) as set_attribute:
+        asyncio.run(
+            aset_input_attributes(
+                span,
+                {
+                    "model": "claude-test",
+                    "stop_sequences": stop_sequences,
+                },
+            )
+        )
+
+    set_attribute.assert_any_call(
+        span,
+        "gen_ai.request.stop_sequences",
+        stop_sequences,
+    )
