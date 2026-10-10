@@ -133,6 +133,11 @@ async def aset_input_attributes(span, kwargs):
     )
     set_span_attribute(span, GenAIAttributes.GEN_AI_REQUEST_TOP_P, kwargs.get("top_p"))
     set_span_attribute(
+    span,
+    "gen_ai.request.stop_sequences",
+    kwargs.get("stop_sequences"),
+)
+    set_span_attribute(
         span, GenAIAttributes.GEN_AI_REQUEST_FREQUENCY_PENALTY, kwargs.get("frequency_penalty")
     )
     set_span_attribute(
